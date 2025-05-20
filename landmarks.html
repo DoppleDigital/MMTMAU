@@ -80,6 +80,25 @@
       background-color: #adadad;
       color: black;
     }
+        table {
+      width: 80%;
+      border-collapse: collapse;
+      margin: 30px auto;
+      font-family: Arial, sans-serif;
+    }
+    th, td {
+      border: 1px solid #333;
+      padding: 10px;
+      text-align: left;
+    }
+    th[colspan="3"] {
+      text-align: center;
+      background-color: #f2f2f2;
+      font-size: 1.2em;
+    }
+    thead tr:nth-child(2) {
+      background-color: #ddd;
+    
     </style>
 </head>
 <body>
@@ -120,6 +139,7 @@
         <br>▪(lrt2) Double Checking Landmarks/ Finding Coordinates/ Finding Address
     </p1>
   </div>
+<div>
   <table>
     <thead>
       <tr>
@@ -181,7 +201,7 @@
       </tr>
     </tbody>
   </table>
-
+</div>
 <script>
 function myFunction() {
   var x = document.getElementById("myLinks");
