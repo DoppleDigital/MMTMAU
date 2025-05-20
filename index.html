@@ -28,6 +28,14 @@
       filter: blur(8px); /* Apply blur effect */
     }
 
+    #SwitchLabel {
+      position: absolute;
+  color: #ccc;
+  top: 42.9%;
+  right: 7.5%;
+  z-index: 12;
+}
+
     .content-box {
       background-color: rgba(51, 51, 51, 0.7); /* Semi-transparent dark background */
       color: white;
@@ -76,6 +84,47 @@
     .footer-buttons button:hover {
       background-color: #0056b3;
     }
+
+.switch {
+  position: absolute;
+  display: inline-block;
+  top: 42%;
+  right: 3%;
+  width: 60px;
+  height: 34px;
+  z-index: 11;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0;
+  right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #4CAF50;
+}
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
   </style>
 </head>
 <body>
@@ -93,15 +142,45 @@
 
   <!-- Footer -->
   <div class="footer">
+    
     <div class="footer-buttons">
       <a href="main_map.html"><button>Open Map</button></a>
       <a href="landmarks.html"><button>Landmarks</button></a>
       <a href="about_us.html"><button>About Us</button></a>
       <a href="Developers.html"><button>Developers</button></a>
+      
     </div>
   </div>
 
+  
+<div class="SwitchLabel" id="SwitchLabel">Mobile Version</div>
+<label class="switch">
+  
+  <input type="checkbox" id="pageSwitch">
+  <span class="slider"></span>
+</label>
+
   <script>
+    // detector
+
+    window.onload = function () {
+  const isMobile = /iPhone|iPad|iPod|Android|webOS|BlackBerry|Windows Phone/i.test(navigator.userAgent);
+  const currentPage = window.location.pathname;
+  const searchParams = new URLSearchParams(window.location.search);
+  const redirected = searchParams.get("redirected");
+
+  // Redirect only if not already redirected
+  if (!redirected) {
+    if (isMobile && !currentPage.includes("index_mobile.html")) {
+      window.location.href = "index_mobile.html?redirected=false";
+    } else if (!isMobile && !currentPage.includes("index_mobile.html")) {
+      window.location.href = "index.html?redirected=true";
+    }
+  }
+};
+
+
+    //
     require([
       "esri/Map",
       "esri/views/MapView"
@@ -118,6 +197,15 @@
         zoom: 12
       });
     });
+document.getElementById("pageSwitch").addEventListener("change", function () {
+  if (this.checked) {
+    // Redirect to mobile version
+    window.location.href = "index_mobile.html";
+  } else {
+    // Redirect to desktop version
+    window.location.href = "index.html";
+  }
+});
   </script>
 
 </body>
