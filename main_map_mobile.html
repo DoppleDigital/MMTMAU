@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manila MRT & LRT Interactive Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/esri-leaflet@3.0.4/dist/esri-leaflet.js"></script> <!-- Esri Leaflet library -->
+  <style>
+    H5 {
+      font-family: Arial, sans-serif;
+      background-color: #2e2e2e;
+      color: #ccc;
+      text-align: center;
+      margin: 0;
+      height: 20px;
+      padding: 5px;
+      border-bottom: 1px solid #4d4d4d;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      overflow: hidden;
+    }
+    .mobile-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  z-index: 10;
+}
+
+    .mobile-layout h1 {
+      font-size: 1.5em;
+    }
+
+    .mobile-layout button {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+    }
+    .topnav {
+      overflow: hidden;
+      background-color: #333;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      z-index: 1000;
+    }
+    .topnav .icon {
+      color: white;
+      text-decoration: none;
+      font-size: 24px;
+    }
+    .topnav .active {
+      background-color: #04AA6D;
+      color: white;
+      padding: 8px 16px;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    #myLinks {
+      position: absolute;
+      top: 80px;
+      left: 10px;
+      display: none;
+      flex-direction: column;
+      background-color: #333;
+      padding: 0;
+      width: 150px;
+      z-index: 999;
+    }
+    #myLinks a {
+      color: white;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+    #myLinks a:hover {
+      background-color: #adadad;
+      color: black;
+    }
+    #source {
+      height: 50px;
+      background-color: #ffffff;
+      text-align: center;
+      line-height: 30px;
+      font-size: 12px;
+      color: #555;
+      position: absolute;
+      bottom: 0px;
+      z-index: 1010;
+      opacity: 75%;
+      padding-right: 5px;
+    }
+    #map {
+      height: 100vh;
+      width: 100vw;
+    }
+    
+    .ZoomControls {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: white;
+      border: 5px solid #555;
+      border-radius: 8px;
+      padding: 5px;
+      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+      z-index: 1001;
+    }
+    .ZoomControls .esri-widget-button {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      background-color: white;
+      border: none;
+      cursor: pointer;
+      color: #4c4c4c;
+      transition: background-color 0.2s ease;
+      margin-bottom: 5px;
+      border-radius: 4px;
+    }
+    .ZoomControls .esri-widget-button:hover {
+      background-color: #f0f0f0;
+    }
+    /* Right Panel styling */
+.right-panel {
+  position: absolute;
+  top: 12.5%;
+  right: 0;
+  bottom: 50%;
+  width: 100px;
+  background-color: rgba(255, 255, 255, 0.8);
+  height: 250px;
+  padding: 10px;
+  box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+}
+
+.right-panel h2 {
+  text-align: center;
+  font-size: 10px;
+  margin-bottom: 15px;
+}
+.left-panel {
+  top: 75%;
+  position: absolute;
+  bottom: 11.1%;
+  right: 0;
+  width: 300px;
+  background-color: rgba(255, 255, 255, 0.521);
+  height: 100%;
+  padding: 10px 10px 10px;
+  box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.3);
+  z-index: 1002;
+}
+
+.left-panel h2 {
+  text-align: center;
+  font-size: 8px;
+  margin-bottom: 15px;
+}
+
+select {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  margin-top: 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+.dotlrt1 {
+  height: 10px;
+  width: 10px;
+  background-color: #05c715;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dotlrt2 {
+  height: 10px;
+  width: 10px;
+  background-color: #2862ff;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dotmrt3 {
+  height: 10px;
+  width: 10px;
+  background-color: #ff0000;
+  border-radius: 50%;
+  display: inline-block;
+}
+/*crosshair*/
+.crosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30px;
+  pointer-events: none;
+  z-index: 1050;
+  display: none;
+}
+.marker-widget {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border: 5px solid #555;
+  display: none;
+  z-index: 1050;
+}
+
+.marker-widget button,
+.marker-widget input {
+  margin: 5px;
+}
+
+.addMarkerBtn .add-marker-btn {
+  position: absolute;
+  top: 60%;
+  left: 15px;
+      width: 40px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      background-color: white;
+      border: 5px solid #555;
+      padding: 10px;
+      cursor: pointer;
+      color: #4c4c4c;
+      transition: background-color 0.2s ease;
+      margin-bottom: 5px;
+      border-radius: 4px;
+  z-index: 1050;
+}
+.delete-marker-btn {
+  margin-top: 5px;
+  padding: 5px 10px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+   /*switch function*/ 
+.switch {
+  position: absolute;
+  display: inline-block;
+  top: 15%;
+  right: 20%;
+  width: 60px;
+  height: 34px;
+  z-index: 11;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0;
+  right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #4CAF50;
+}
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+  </style>
+</head>
+
+<body>
+<div class="mobile-layout">
+  <h5>Go-Railz MMTM_UA</h5>
+
+  <div class="topnav">
+    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+      <i class="fa fa-bars">&#9776;</i>
+    </a>
+    <a href="Home.html" class="active">Mobile Version<div><div class="SwitchLabel" id="SwitchLabel"></div>
+<label class="switch">
+  
+<input type="checkbox" id="pageSwitch">
+<span class="slider"></span>
+</label>
+</div>
+</a>
+</div>
+
+  <div id="myLinks">
+    <a href="index_mobile.html">Home</a>
+    <a href="landmarks.html">Landmarks </a>
+    <a href="Developers.html">Developers </a>
+    <a href="about_us.html">About Us</a>
+  </div>
+
+  <!-- Zoom Controls -->
+  <div id="ZoomControls" class="ZoomControls">
+    <div class="esri-widget-button" onclick="map.zoomIn()" title="Zoom In"><b>+</b></div>
+    <div class="esri-widget-button" onclick="map.zoomOut()" title="Zoom Out"><b>−</b></div>
+    <div class="esri-widget-button" onclick="map.setView([14.583, 121.0], 12)" title="Reset Zoom"><b>↺</b></div>
+  </div>
+
+  <!-- Right Panel with dropdown list of stations -->
+<div class="right-panel">
+  <h2>Stations</h2>
+  <p1><b>MRT-3</b>​<span class="dotmrt3"></span></p1>
+  <select id="stationDropdown" onchange="zoomToStation()">
+    <option value="">Select a station</option>
+  </select><br>
+  <p1><b>LRT-1</b>​<span class="dotlrt1"></span></p1>
+  <select id="lrt1stationDropdown" onchange="zoomTolrt1Station()">
+    <option value="">Select a station</option>
+  </select>
+  <br>
+  <p1><b>LRT-2</b>​<span class="dotlrt2"></span></p1>
+  <select id="lrt2stationDropdown" onchange="zoomTolrt2Station()">
+    <option value="">Select a station</option>
+  </select>
+</div>
+<div class="left-panel">
+  <h2>Developers Note</h2>
+  <p1><b>Delete Button for marker is still being reconfigured and is unusable</b></p1>
+</div>
+
+<div id="source">
+<p>Map Source: Esri, HERE, Garmin, FAO, NOAA, USGS, © OpenStreetMap contributors, and the GIS user community</p>
+</div>
+
+  <!-- Map Container -->
+  <div id="map"></div>
+
+  <!--crosshair-->
+  <div class="crosshair" id="crosshair"><img src="" alt="">💠</div>
+    <div class="marker-widget" id="markerWidget">
+      <p2><b>Name:</b></p2>
+    <input type="text" id="markerName" placeholder="Enter marker name" />
+    <br />
+    <button id="confirmBtn">Confirm</button>
+    <button id="cancelBtn">Cancel</button>
+  </div>
+
+  <div id="addMarkerBtn" class="addMarkerBtn"><button class="add-marker-btn" id="addMarkerBtn">▼</button></div>
+
+</div>
+  <script>
+    function myFunction() {
+      var x = document.getElementById("myLinks");
+      x.style.display = (x.style.display === "block") ? "none" : "block";
+    }
+
+    var map = L.map('map', {
+      center: [14.583, 121.0],
+      zoom: 12,
+      zoomControl: false,  // Disable default zoom controls
+      scrollWheelZoom: true, // Disable scroll zooming
+      minZoom: 12.1,
+      maxZoom: 18
+    });
+
+    // Replace Leaflet tile layer with Esri basemap
+    L.esri.basemapLayer('Streets').addTo(map); // Using Esri's 'Streets' basemap
+
+    // MRT-3 Stations
+    var stations = [
+      { name: "Taft Avenue", coords: [14.5375100000000, 121.00139100000000] },
+      { name: "Magallanes", coords: [14.542013680620821, 121.01927039822486] },
+      { name: "Ayala", coords: [14.54933012710519, 121.02798715857679] },
+      { name: "Buendía", coords: [14.554899331783487, 121.03448427986025] },
+      { name: "Guadalupe", coords: [14.56690, 121.04548] },
+      { name: "Boni Avenue", coords: [14.57440, 121.04800] },
+      { name: "Shaw Boulevard", coords: [14.58287, 121.05377] },
+      { name: "Ortigas", coords: [14.5890, 121.0572] },
+      { name: "Santolan", coords: [14.60841, 121.05620] },
+      { name: "Araneta-Cubao", coords: [14.61971, 121.05100] },
+      { name: "GMA-Kamuning", coords: [14.63721, 121.04200] },
+      { name: "Quezon Avenue", coords: [14.64345, 121.03800] },
+      { name: "North Avenue", coords: [14.65228, 121.03220] }
+    ];
+
+    // Intermediate points for MRT-3
+    var taftToMagallanesIntermediatePoint1 = [14.539000, 121.012041];
+    var taftToMagallanesIntermediatePoint2 = [14.540649299205931, 121.01676253077923];
+    var buendiaToGuadalupeIntermediatePoint1 = [14.562490, 121.043544];
+    var buendiaToGuadalupeIntermediatePoint2 = [14.563490, 121.0434544]; // New second intermediate point
+    var ortigasToSantolanIntermediatePoints = [
+      [14.597699, 121.059774],
+      [14.599799, 121.059774],
+      [14.600600, 121.059624]
+    ];
+    var aranetaToGMAIntermediatePoint = [14.632915, 121.044853];
+
+    var latLngs = [];
+
+    stations.forEach(function (station, index) {
+      L.marker(station.coords, {
+        icon: L.icon({
+          iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png',
+          iconSize: [32, 32],
+          iconAnchor: [16, 32],
+          popupAnchor: [0, -32]
+        })
+      }).addTo(map).bindPopup(station.name);
+      latLngs.push(station.coords);
+
+      if (index === 0) {
+        latLngs.push(taftToMagallanesIntermediatePoint1);
+        latLngs.push(taftToMagallanesIntermediatePoint2);
+      }
+
+      if (index === 3) {
+        latLngs.push(buendiaToGuadalupeIntermediatePoint1);
+        latLngs.push(buendiaToGuadalupeIntermediatePoint2); // Add the second intermediate point
+      }
+
+      if (index === 7) {
+        latLngs = latLngs.concat(ortigasToSantolanIntermediatePoints);
+      }
+
+      if (index === 9) {
+        latLngs.push(aranetaToGMAIntermediatePoint);
+      }
+    });
+
+    // Populate dropdown with MRT station names
+stations.forEach(function(station, index) {
+  var option = document.createElement("option");
+  option.value = index; // Use index to reference the station
+  option.textContent = station.name;
+  document.getElementById('stationDropdown').appendChild(option);
+});
+
+// Function to zoom to selected station
+function zoomToStation() {
+  var dropdown = document.getElementById('stationDropdown');
+  var selectedIndex = dropdown.value;
+
+  if (selectedIndex !== "") {
+    var station = stations[selectedIndex];
+    map.setView(station.coords, 16); // Zoom to the station location
+  }
+};
+
+    // MRT-3 polyline (red)
+    L.polyline(latLngs, { color: 'red', weight: 5, opacity: 0.7 }).addTo(map);
+
+    // LRT-1 Stations
+    var lrt1Stations = [
+      { name: "Fernando Poe Jr.", coords: [14.657558081815215, 121.02114021000000] },
+      { name: "Balintawak", coords: [14.657410423438868, 121.00389000068607] },
+      { name: "Monumento", coords: [14.6546, 120.98388000000000] },
+      { name: "5th Avenue", coords: [14.6475, 120.98378000000000] },
+      { name: "R. Papa", coords: [14.63599900000000, 120.98230000000000] },
+      { name: "Abad Santos", coords: [14.63049999000000, 120.98150000000000] },
+      { name: "Blumentritt", coords: [14.62269000000000, 120.98290900000000] },
+      { name: "Tayuman", coords: [14.61665000000000, 120.98272900000000] },
+      { name: "Bambang", coords: [14.611100000000000, 120.98250000000000] },
+      { name: "Doroteo Jose", coords: [14.605400000000000, 120.98205000000000] },
+      { name: "Carriedo", coords: [14.599186869743297, 120.98135145339688] },
+      { name: "Central Terminal", coords: [14.592918109587915, 120.98163299560073] },
+      { name: "UN Avenue", coords: [14.582788799740593, 120.98457808026038] },
+      { name: "Pedro Gil", coords: [14.576747922794503, 120.98823735327056] },
+      { name: "Quirino", coords: [14.570455742757124, 120.99154926676513] },
+      { name: "Vito Cruz", coords: [14.56348574768716, 120.99481780909494] },
+      { name: "Gil Puyat", coords: [14.55401504430065, 120.99715450805488] },
+      { name: "Libertad", coords: [14.547990958638776, 120.99862313977528] },
+      { name: "EDSA", coords: [14.538525227631484, 121.00072600615508] },
+      { name: "Baclaran", coords: [14.534333840823964, 120.9984607244347] },
+      { name: "Redemptorist-Aseana", coords: [14.530339965919639, 120.99325823435671] },
+      { name: "MIA Road", coords: [14.518638181197304, 120.9933919122971] },
+      { name: "PITX", coords: [14.509254831311972, 120.99195782378519] },
+      { name: "Ninoy Aquino Avenue", coords: [14.499041120708373, 120.99426995784219] },
+      { name: "Dr. Santos", coords: [14.485556911923078, 120.98976936946534] },
+      { name: "Las Piñas Station", coords: [14.475548167324458, 120.97584284673299] }
+    ];
+
+    var lrt1LatLngs = [];
+
+    //intermediatepoints
+    
+
+      // marker
+    lrt1Stations.forEach(function (station) {
+      L.marker(station.coords, {
+        icon: L.icon({
+          iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/green-dot.png',
+          iconSize: [32, 32],
+          iconAnchor: [16, 32],
+          popupAnchor: [0, -32]
+        })
+      }).addTo(map).bindPopup("LRT-1: " + station.name);
+      lrt1LatLngs.push(station.coords);
+    });
+
+    //intermediat points
+    // Populate dropdown with lRT1 station names
+lrt1Stations.forEach(function(lrt1Stations, index) {
+  var option = document.createElement("option");
+  option.value = index; // Use index to reference the station
+  option.textContent = lrt1Stations.name;
+  document.getElementById('lrt1stationDropdown').appendChild(option);
+});
+
+// Function to zoom to selected station
+function zoomTolrt1Station() {
+  var dropdown = document.getElementById('lrt1stationDropdown');
+  var selectedIndex = dropdown.value;
+
+  if (selectedIndex !== "") {
+    var station = lrt1Stations[selectedIndex];
+    map.setView(station.coords, 16); // Zoom to the station location
+  }
+};
+
+    L.polyline(lrt1LatLngs, { color: 'green', weight: 5, opacity: 0.7 }).addTo(map);
+
+    var lrt2Stations = [
+      { name: "Antipolo Station", coords: [14.625079328915435, 121.1213585512071] },
+      { name: "Marikina-Pasig Station", coords: [14.620363270114886, 121.10002125120703] },
+      { name: "Santolan Station", coords: [14.622089347906256, 121.085900000000] },
+      { name: "Katipunan Station", coords: [14.631051221876658, 121.07245869901492] },
+      { name: "Anonas Station", coords: [14.628205412530635, 121.06470509538329] },
+      { name: "Araneta-Cubao Station", coords: [14.623422672571621, 121.05260821227972] },
+      { name: "Belmonte Station", coords: [14.618764665540017, 121.04271672883523] },
+      { name: "Gilmore station", coords: [14.613738420862985, 121.03414330887728] },
+      { name: "J.Ruiz Station", coords: [14.610833896859392, 121.02616548004208] },
+      { name: "V.Mapa Station" , coords: [14.604326036580261, 121.0172209683946]},
+      { name: "Pureza Station", coords: [14.601990284159292, 121.00512445582365] },
+      { name: "Legarda Station", coords: [14.601114585130752, 120.992565] },
+      { name: "Recto Station", coords: [14.603690838470502, 120.98308280076897] },
+    ];
+    var lrt2LatLngs = [];
+
+    lrt2Stations.forEach(function (station) {
+      L.marker(station.coords, {
+        icon: L.icon({
+          iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png',
+          iconSize: [32, 32],
+          iconAnchor: [16, 32],
+          popupAnchor: [0, -32]
+        })
+      }).addTo(map).bindPopup("LRT-2: " + station.name);
+      lrt2LatLngs.push(station.coords);
+    });
+
+    // Populate dropdown with lRT1 station names
+lrt2Stations.forEach(function(lrt2Stations, index) {
+  var option = document.createElement("option");
+  option.value = index; // Use index to reference the station
+  option.textContent = lrt2Stations.name;
+  document.getElementById('lrt2stationDropdown').appendChild(option);
+});
+
+// Function to zoom to selected station
+    function zoomTolrt2Station() {
+  var dropdown = document.getElementById('lrt2stationDropdown');
+  var selectedIndex = dropdown.value;
+
+  if (selectedIndex !== "") {
+    var station = lrt2Stations[selectedIndex];
+    map.setView(station.coords, 16); // Zoom to the station location
+  }
+};
+
+    L.polyline(lrt2LatLngs, { color: 'blue', weight: 5, opacity: 0.7 }).addTo(map);
+
+//crosshair function
+
+      let markerPlacementMode = false;
+let markerWidget = document.getElementById("markerWidget");
+let crosshair = document.getElementById("crosshair");
+let confirmBtn = document.getElementById("confirmBtn");
+let cancelBtn = document.getElementById("cancelBtn");
+let markerNameInput = document.getElementById("markerName");
+
+document.getElementById("addMarkerBtn").addEventListener("click", function () {
+  markerPlacementMode = true;
+  crosshair.style.display = "block";
+  markerWidget.style.display = "block";
+  markerNameInput.value = ""; // Reset input
+});
+
+cancelBtn.addEventListener("click", function () {
+  markerPlacementMode = false;
+  crosshair.style.display = "none";
+  markerWidget.style.display = "none";
+  markerNameInput.value = "";
+});
+
+confirmBtn.addEventListener("click", function () {
+  if (!markerPlacementMode) return;
+
+  const name = markerNameInput.value.trim();
+  if (name === "") {
+    alert("Please enter a name for the marker.");
+    return;
+  }
+
+  const center = map.getCenter();
+  L.marker(center, {
+    icon: L.icon({
+      iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
+    })
+  }).addTo(map).bindPopup(name).openPopup();
+
+  markerPlacementMode = false;
+  crosshair.style.display = "none";
+  markerWidget.style.display = "none";
+  markerNameInput.value = "";
+
+  const marker = L.marker(center, {
+  icon: L.icon({
+    iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  })
+}).addTo(map);
+
+// Create custom popup with delete button
+const popupContent = document.createElement("div");
+popupContent.innerHTML = `
+  <div><strong>${name}</strong></div>
+  <button class="delete-marker-btn">Delete Marker</button>
+`;
+
+// Attach popup
+marker.bindPopup(popupContent).openPopup();
+
+// Add event listener to the delete button
+popupContent.querySelector(".delete-marker-btn").addEventListener("click", function () 
+{
+  map.removeLayer(marker);
+});  
+marker.push(marker);
+markerCount++;
+markerNameInput.value = "";
+updateMarkerCount();
+exitPlacementMode();
+});
+
+document.getElementById("pageSwitch").addEventListener("change", function () {
+  if (this.checked) {
+    // Redirect to mobile version
+    window.location.href = "main_map.html";
+  } else {
+    // Redirect to desktop version
+    window.location.href = "main_map.html";
+  }
+});
+
+</script>
+
+</body>
+</html>
