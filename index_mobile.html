@@ -162,24 +162,6 @@ input:checked + .slider:before {
 
   <script>
     // detector
-
-    window.onload = function () {
-  const isMobile = /iPhone|iPad|iPod|Android|webOS|BlackBerry|Windows Phone/i.test(navigator.userAgent);
-  const currentPage = window.location.pathname;
-  const searchParams = new URLSearchParams(window.location.search);
-  const redirected = searchParams.get("redirected");
-
-  // Redirect only if not already redirected
-  if (!redirected) {
-    if (isMobile && !currentPage.includes("index_mobile.html")) {
-      window.location.href = "index_mobile.html?redirected=false";
-    } else if (!isMobile && !currentPage.includes("index_mobile.html")) {
-      window.location.href = "index.html?redirected=true";
-    }
-  }
-};
-
-
     //
     require([
       "esri/Map",
