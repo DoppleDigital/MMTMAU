@@ -136,6 +136,24 @@
   font-size: 15px;
   margin-bottom: 15px;
 }
+.left-panel {
+  top: 75%;
+  position: absolute;
+  bottom: 11.1%;
+  right: 0;
+  width: 300px;
+  background-color: rgba(255, 255, 255, 0.521);
+  height: 100%;
+  padding: 10px 10px 10px;
+  box-shadow: -2px 0px 5px rgba(0, 0, 0, 0.3);
+  z-index: 1002;
+}
+
+.left-panel h2 {
+  text-align: center;
+  font-size: 8px;
+  margin-bottom: 15px;
+}
 
 select {
   width: 100%;
@@ -166,7 +184,64 @@ select {
   border-radius: 50%;
   display: inline-block;
 }
+/*crosshair*/
+.crosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30px;
+  pointer-events: none;
+  z-index: 1050;
+  display: none;
+}
+.marker-widget {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border: 5px solid #555;
+  display: none;
+  z-index: 1050;
+}
 
+.marker-widget button,
+.marker-widget input {
+  margin: 5px;
+}
+
+.add-marker-btn {
+  position: absolute;
+  top: 60%;
+  left: 15px;
+      width: 40px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      background-color: white;
+      border: 5px solid #555;
+      padding: 10px;
+      cursor: pointer;
+      color: #4c4c4c;
+      transition: background-color 0.2s ease;
+      margin-bottom: 5px;
+      border-radius: 4px;
+  z-index: 1050;
+}
+.delete-marker-btn {
+  margin-top: 5px;
+  padding: 5px 10px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
   </style>
 </head>
 
@@ -192,7 +267,6 @@ select {
     <div class="esri-widget-button" onclick="map.zoomIn()" title="Zoom In"><b>+</b></div>
     <div class="esri-widget-button" onclick="map.zoomOut()" title="Zoom Out"><b>−</b></div>
     <div class="esri-widget-button" onclick="map.setView([14.583, 121.0], 12)" title="Reset Zoom"><b>↺</b></div>
-    <div class="esri-widget-button" onclick="" title="Add marker">▼</div>
   </div>
 
   <!-- Right Panel with dropdown list of stations -->
@@ -212,6 +286,10 @@ select {
     <option value="">Select a station</option>
   </select>
 </div>
+<div class="left-panel">
+  <h2>Developers Note</h2>
+  <p1><b>Delete Button for marker is still being reconfigured and is unusable</b></p1>
+</div>
 
 <div id="source">
 <p>Map Source: Esri, HERE, Garmin, FAO, NOAA, USGS, © OpenStreetMap contributors, and the GIS user community</p>
@@ -219,6 +297,18 @@ select {
 
   <!-- Map Container -->
   <div id="map"></div>
+
+  <!--crosshair-->
+  <div class="crosshair" id="crosshair"><img src="" alt="">💠</div>
+    <div class="marker-widget" id="markerWidget">
+      <p2><b>Name:</b></p2>
+    <input type="text" id="markerName" placeholder="Enter marker name" />
+    <br />
+    <button id="confirmBtn">Confirm</button>
+    <button id="cancelBtn">Cancel</button>
+  </div>
+
+  <div id="addMarkerBtn" class="addMarkerBtn"><button class="add-marker-btn" id="addMarkerBtn">▼</button></div>
 
 
   <script>
@@ -441,6 +531,84 @@ lrt2Stations.forEach(function(lrt2Stations, index) {
 };
 
     L.polyline(lrt2LatLngs, { color: 'blue', weight: 5, opacity: 0.7 }).addTo(map);
+
+//crosshair function
+
+      let markerPlacementMode = false;
+let markerWidget = document.getElementById("markerWidget");
+let crosshair = document.getElementById("crosshair");
+let confirmBtn = document.getElementById("confirmBtn");
+let cancelBtn = document.getElementById("cancelBtn");
+let markerNameInput = document.getElementById("markerName");
+
+document.getElementById("addMarkerBtn").addEventListener("click", function () {
+  markerPlacementMode = true;
+  crosshair.style.display = "block";
+  markerWidget.style.display = "block";
+  markerNameInput.value = ""; // Reset input
+});
+
+cancelBtn.addEventListener("click", function () {
+  markerPlacementMode = false;
+  crosshair.style.display = "none";
+  markerWidget.style.display = "none";
+  markerNameInput.value = "";
+});
+
+confirmBtn.addEventListener("click", function () {
+  if (!markerPlacementMode) return;
+
+  const name = markerNameInput.value.trim();
+  if (name === "") {
+    alert("Please enter a name for the marker.");
+    return;
+  }
+
+  const center = map.getCenter();
+  L.marker(center, {
+    icon: L.icon({
+      iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
+    })
+  }).addTo(map).bindPopup(name).openPopup();
+
+  markerPlacementMode = false;
+  crosshair.style.display = "none";
+  markerWidget.style.display = "none";
+  markerNameInput.value = "";
+
+  const marker = L.marker(center, {
+  icon: L.icon({
+    iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  })
+}).addTo(map);
+
+// Create custom popup with delete button
+const popupContent = document.createElement("div");
+popupContent.innerHTML = `
+  <div><strong>${name}</strong></div>
+  <button class="delete-marker-btn">Delete Marker</button>
+`;
+
+// Attach popup
+marker.bindPopup(popupContent).openPopup();
+
+// Add event listener to the delete button
+popupContent.querySelector(".delete-marker-btn").addEventListener("click", function () 
+{
+  map.removeLayer(marker);
+});  
+marker.push(marker);
+markerCount++;
+markerNameInput.value = "";
+updateMarkerCount();
+exitPlacementMode();
+});
 
   </script>
 
