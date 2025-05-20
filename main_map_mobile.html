@@ -679,11 +679,11 @@ exitPlacementMode();
 
 document.getElementById("pageSwitch").addEventListener("change", function () {
   if (this.checked) {
-    // Redirect to desktop version
-    window.location.href = "main_map.html";
-  } else {
     // Redirect to mobile version
     window.location.href = "main_map_mobile.html";
+  } else {
+    // Redirect to desktop version
+    window.location.href = "main_map.html";
   }
 });
 
