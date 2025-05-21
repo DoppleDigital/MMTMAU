@@ -1,0 +1,231 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developers Page</title>
+    <style>
+        H5 {
+            font-family: Arial, san-serif;
+            background-color: #2e2e2e;
+            color:#ccc;
+            text-align: center;
+            margin: 0;
+            height: 20px;
+            padding: 5px;
+            border-bottom: 1px solid #4d4d4d;
+         }
+         H3{
+          border-bottom: solid #4d4d4d;
+         }
+        body {            font-family: Arial, sans-serif;
+            margin: 0;
+            overflow: hidden;
+            background-color: #555;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            overflow-y: scroll;
+            background-color: #555;
+        }
+            /*Mobile layout*/
+.mobile-layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  z-index: 10;
+}
+
+    .mobile-layout h1 {
+      font-size: 1.5em;
+    }
+
+    .mobile-layout button {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+    }
+        .message1 {
+          background-color: #808080;
+          height: auto;
+          margin-top: 2%;
+          margin-left: 2%;
+          margin-right: 2%;
+          margin-bottom: 5%;
+          padding-top: 2%;
+          padding-left: 2%;
+          padding-right: 2%;
+          padding-bottom: 10%;
+          border-top: 1px solid #4d4d4d;
+          max-height: 400px; /* Set a max height to enable scrolling */
+          overflow-y: auto;  /* Enable vertical scrolling if content overflows */
+        }
+        /*Navigation*/
+        .topnav {
+      overflow: hidden;
+      background-color: #333;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      z-index: 1000;
+    }
+    .topnav .icon {
+      color: white;
+      text-decoration: none;
+      font-size: 24px;
+    }
+    .topnav .active {
+      background-color: #04AA6D;
+      color: white;
+      padding: 8px 16px;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    #myLinks {
+      position: absolute;
+      top: 80px;
+      left: 10px;
+      display: none;
+      flex-direction: column;
+      background-color: #333;
+      padding: 0;
+      width: 150px;
+      z-index: 999;
+    }
+    #myLinks a {
+      color: white;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+    #myLinks a:hover {
+      background-color: #adadad;
+      color: black;
+    }
+   /*switch function*/ 
+.switch {
+  position: absolute;
+  display: inline-block;
+  top: 15%;
+  right: 20%;
+  width: 60px;
+  height: 34px;
+  z-index: 11;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0;
+  right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #4CAF50;
+}
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+    </style>
+</head>
+<body>
+<div class="mobile-layout"></div>
+  <H5>Go-Railz MMTM_UA</H5>
+<!-- Top Navigation Menu -->
+  <div class="topnav">
+    <!-- Hamburger icon on the left -->
+    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+      <i class="fa fa-bars">&#9776;</i>
+    </a>
+
+    <!-- Logo on the right -->
+    <a href="Home.html" class="active">Mobile Version<div><div class="SwitchLabel" id="SwitchLabel"></div>
+<label class="switch">
+  
+<input type="checkbox" id="pageSwitch">
+<span class="slider"></span>
+</label>
+</div></a>
+  </div>
+
+  <!-- Hidden dropdown menu -->
+  <div id="myLinks">
+    <a href="index.html">Home</a>
+    <a href="main_map.html">MRT Map</a>
+    <a href="landmarks.html">Landmarks </a>
+    <a href="about_us.html">About Us</a>
+  </div>
+
+  <div class="message1">
+    <H3>Note Developers: </H3>
+    <p1>John Anthony O. Poquiz <br>James Angelo O Poquiz <br><br> Note: Hello, this work is not
+    completed yet.</p1>
+    <H3>Contributers: </H3>
+    <p1>Reiham De Guzman</p1>
+    <br><br>
+    <H3>Unverified: </H3>
+    <p1>
+    ▪John Christopher Adrian Sison
+    <br>▪Lloyd Alain Regala
+    <br>▪Von Ryan Fornal</p1>
+    <h4>version 0.0.15.1</h4>
+    <p2><b>changelog</b><br>
+      <br>-added navigation menu using hamburger.
+      <br>-added Add marker function.
+    </p2>
+        <h4>version 0.0.20.0</h4>
+    <p2><b>changelog</b><br>
+      <br>-updated navigation menu using hamburger.
+      <br>-updated Add marker function.
+    </p2>
+    <h4>version 0.0.30.0</h4>
+    <p2><b>changelog</b><br>
+      <br>-Zoom in function to marker
+      <br>-Scroll Station wheel selection
+      <br>-Left Panel for mor buttons
+      <br>-Added LRT 2 & 1 Station
+    </p2>
+  </div>
+
+<script>
+function myFunction() {
+  var x = document.getElementById("myLinks");
+  if (x.style.display === "block") {
+    x.style.display = "none";
+  } else {
+    x.style.display = "block";
+  }
+}
+document.getElementById("pageSwitch").addEventListener("change", function () {
+  if (this.checked) {
+    // Redirect to mobile version
+    window.location.href = "Developers_mobile.html";
+  } else {
+    // Redirect to desktop version
+    window.location.href = "Developers.html";
+  }
+});
+</script>
+</body>
+</html>
