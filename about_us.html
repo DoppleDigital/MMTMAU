@@ -80,6 +80,46 @@
       background-color: #adadad;
       color: black;
     }
+    .switch {
+  position: absolute;
+  display: inline-block;
+  top: 15%;
+  right: 10%;
+  width: 60px;
+  height: 34px;
+  z-index: 11;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0;
+  right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #4CAF50;
+}
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
     </style>
 </head>
 <body>
@@ -91,7 +131,13 @@
     </a>
 
     <!-- Logo on the right -->
-    <a href="Home.html" class="active">Go-Railz MMTM_UA</a>
+    <a href="Home.html" class="active">PC Version<div><div class="SwitchLabel" id="SwitchLabel"></div>
+<label class="switch">
+  
+<input type="checkbox" id="pageSwitch">
+<span class="slider"></span>
+</label>
+</div></a>
   </div>
 
   <!-- Hidden dropdown menu -->
@@ -106,7 +152,7 @@
   <div class="message1">
     <H3>Note Developers: </H3>
     <p1>John Anthony O. Poquiz <br>James Angelo O Poquiz <br><br> Note: Hello, this work is not
-    completed yet. this is output for our capstone project, not optimized for mobile</p1>
+    completed yet. this is output for our capstone project</p1>
   </div>
 
 <script>
@@ -118,6 +164,15 @@ function myFunction() {
     x.style.display = "block";
   }
 }
+document.getElementById("pageSwitch").addEventListener("change", function () {
+  if (this.checked) {
+    // Redirect to mobile version
+    window.location.href = "about_us_mobile.html";
+  } else {
+    // Redirect to desktop version
+    window.location.href = "about_us.html";
+  }
+});
 </script>
 </body>
 </html>
