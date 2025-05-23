@@ -450,11 +450,16 @@ function zoomToStation() {
   var dropdown = document.getElementById('stationDropdown');
   var selectedIndex = dropdown.value;
 
+  // Reset others
+  document.getElementById('lrt1stationDropdown').selectedIndex = 0;
+  document.getElementById('lrt2stationDropdown').selectedIndex = 0;
+
   if (selectedIndex !== "") {
     var station = stations[selectedIndex];
-    map.setView(station.coords, 16); // Zoom to the station location
+    map.setView(station.coords, 16);
   }
-};
+}
+
 
     // MRT-3 polyline (red)
     L.polyline(latLngs, { color: 'red', weight: 5, opacity: 0.7 }).addTo(map);
@@ -521,11 +526,16 @@ function zoomTolrt1Station() {
   var dropdown = document.getElementById('lrt1stationDropdown');
   var selectedIndex = dropdown.value;
 
+  // Reset others
+  document.getElementById('stationDropdown').selectedIndex = 0;
+  document.getElementById('lrt2stationDropdown').selectedIndex = 0;
+
   if (selectedIndex !== "") {
     var station = lrt1Stations[selectedIndex];
-    map.setView(station.coords, 16); // Zoom to the station location
+    map.setView(station.coords, 16);
   }
-};
+}
+
 
     L.polyline(lrt1LatLngs, { color: 'green', weight: 5, opacity: 0.7 }).addTo(map);
 
@@ -567,15 +577,20 @@ lrt2Stations.forEach(function(lrt2Stations, index) {
 });
 
 // Function to zoom to selected station
-    function zoomTolrt2Station() {
+function zoomTolrt2Station() {
   var dropdown = document.getElementById('lrt2stationDropdown');
   var selectedIndex = dropdown.value;
 
+  // Reset others
+  document.getElementById('stationDropdown').selectedIndex = 0;
+  document.getElementById('lrt1stationDropdown').selectedIndex = 0;
+
   if (selectedIndex !== "") {
     var station = lrt2Stations[selectedIndex];
-    map.setView(station.coords, 16); // Zoom to the station location
+    map.setView(station.coords, 16);
   }
-};
+}
+
 
     L.polyline(lrt2LatLngs, { color: 'blue', weight: 5, opacity: 0.7 }).addTo(map);
 
