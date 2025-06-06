@@ -650,6 +650,15 @@ confirmBtn.addEventListener("click", function () {
     return;
   }
 // blue dot
+    const center = map.getCenter();
+  L.marker(center, {
+    icon: L.icon({
+      iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/yellow-box.png',
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
+    })
+  }).addTo(map).bindPopup(name).openPopup();
 
   markerPlacementMode = false;
   crosshair.style.display = "none";
@@ -658,7 +667,7 @@ confirmBtn.addEventListener("click", function () {
 
   const marker = L.marker(center, {
   icon: L.icon({
-    iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png',
+    iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/yellow-box.png',
     iconSize: [32, 32],
     iconAnchor: [16, 32],
     popupAnchor: [0, -32]
