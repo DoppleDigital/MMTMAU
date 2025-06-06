@@ -340,7 +340,7 @@ input:checked + .slider:before {
 </div>
 
 <div id="addMarkerBtn" class="addMarkerBtn">
-<div class="esri-widget-button" id="addMarkerBtn" title="Add Marker" style="font-weight:bold;">▼</div></div>
+<div class="esri-widget-button" title="Add Marker" style="font-weight:bold;">▼</div></div>
 
   <!-- Right Panel with dropdown list of stations -->
 <div class="right-panel">
@@ -665,7 +665,7 @@ confirmBtn.addEventListener("click", function () {
   markerWidget.style.display = "none";
   markerNameInput.value = "";
 
-  const custommarker = L.marker(center, {
+  const marker = L.marker(center, {
   icon: L.icon({
     iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png',
     iconSize: [32, 32],
