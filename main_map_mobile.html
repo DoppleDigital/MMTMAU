@@ -304,9 +304,50 @@ input:checked + .slider {
 input:checked + .slider:before {
   transform: translateX(26px);
 }
+/*help Button*/
+.help-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  background-color: #0078d4;
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 32px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 1000;
+}
+.help-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #f9f9f9;
+  border: 2px solid #555;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 300px;
+  display: none;
+  z-index: 2000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.help-content h3 {
+  margin-top: 0;
+}
+.close-help {
+  margin-top: 10px;
+  background-color: #0078d4;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
   </style>
 </head>
-
 <body>
 <div class="mobile-layout">
   <h5>Go-Railz MMTM_UA</h5>
@@ -316,15 +357,13 @@ input:checked + .slider:before {
       <i class="fa fa-bars">&#9776;</i>
     </a>
     <a href="Home.html" class="active">Mobile Version<div><div class="SwitchLabel" id="SwitchLabel"></div>
-<label class="switch">
-  
+<label class="switch">  
 <input type="checkbox" id="pageSwitch">
 <span class="slider"></span>
 </label>
 </div>
 </a>
 </div>
-
   <div id="myLinks">
     <a href="index_mobile.html">Home</a>
     <a href="landmarks.html">Landmarks </a>
@@ -332,7 +371,6 @@ input:checked + .slider:before {
     <a href="about_us_mobile.html">About Us</a>
     <a href="help.html">Help</a>
   </div>
-
   <!-- Zoom Controls -->
   <div id="ZoomControls" class="ZoomControls">
     <div class="esri-widget-button" onclick="map.zoomIn()" title="Zoom In"><b>+</b></div>
@@ -379,9 +417,23 @@ input:checked + .slider:before {
     <button id="confirmBtn">Confirm</button>
     <button id="cancelBtn">Cancel</button>
   </div>
-
   <div id="addMarkerBtn" class="addMarkerBtn"><button class="add-marker-btn" id="addMarkerBtn">▼</button></div>
-
+</div>
+<!-- Help Button -->
+<div id="help-button">?</div>
+<!-- Help Popup -->
+<div id="help-popup">
+  <div id="help-content">
+    <h3>Map Instructions</h3>
+    <ul>
+      <li><strong>Zoom Controls:</strong> Use the + and − buttons to zoom in and out.</li>
+      <li><strong>Marker Mode:</strong> Click "Place Marker" to enter placement mode. Tap again on the map to drop a marker.</li>
+      <li><strong>Exit Marker Mode:</strong> Click "Exit Placement Mode" to disable placing markers.</li>
+      <li><strong>Station Selector:</strong> Use the dropdown to zoom to a specific station.</li>
+      <li><strong>Reset Button:</strong> Resets the map view to default.</li>
+    </ul>
+    <button id="close-help">Close</button>
+  </div>
 </div>
   <script>
     function myFunction() {
@@ -757,6 +809,21 @@ document.getElementById('locateBtn').addEventListener('click', function () {
       timeout: 10000
     }
   );
+});
+document.getElementById("help-button").addEventListener("click", function () {
+  document.getElementById("help-popup").style.display = "block";
+});
+
+document.getElementById("close-help").addEventListener("click", function () {
+  document.getElementById("help-popup").style.display = "none";
+});
+
+// Optional: close help popup when clicking outside of it
+window.addEventListener("click", function (e) {
+  const popup = document.getElementById("help-popup");
+  if (e.target === popup) {
+    popup.style.display = "none";
+  }
 });
 </script>
 
