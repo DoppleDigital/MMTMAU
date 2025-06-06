@@ -649,16 +649,7 @@ confirmBtn.addEventListener("click", function () {
     alert("Please enter a name for the marker.");
     return;
   }
-
-  const center = map.getCenter();
-  L.marker(center, {
-    icon: L.icon({
-      iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png',
-      iconSize: [32, 32],
-      iconAnchor: [16, 32],
-      popupAnchor: [0, -32]
-    })
-  }).addTo(map).bindPopup(name).openPopup();
+// blue dot
 
   markerPlacementMode = false;
   crosshair.style.display = "none";
