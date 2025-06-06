@@ -44,7 +44,7 @@
     .topnav {
       overflow: hidden;
       background-color: #333;
-      position: relative;
+      position: absolute;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -335,6 +335,7 @@ input:checked + .slider:before {
     <div class="esri-widget-button" onclick="map.zoomIn()" title="Zoom In"><b>+</b></div>
     <div class="esri-widget-button" onclick="map.zoomOut()" title="Zoom Out"><b>−</b></div>
     <div class="esri-widget-button" onclick="map.setView([14.583, 121.0], 12)" title="Reset Zoom"><b>↺</b></div>
+    <div class="esri-widget-button" id="locateBtn" title="Locate Me" style="font-weight:bold;">👤</div>
   </div>
 
   <!-- Right Panel with dropdown list of stations -->
