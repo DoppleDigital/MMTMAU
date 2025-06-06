@@ -305,47 +305,41 @@ input:checked + .slider:before {
   transform: translateX(26px);
 }
 /*help Button*/
-.help-button {
-  position: absolute;
-  top: 50px;
-  left: 0;
-  width: 32px;
-  height: 32px;
-  background-color: #0078d4;
-  color: white;
-  border-radius: 50%;
-  text-align: center;
-  line-height: 32px;
-  font-weight: bold;
-  cursor: pointer;
-  z-index: 2000;
-}
-.help-popup {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #f9f9f9;
-  border: 2px solid #555;
-  padding: 20px;
-  border-radius: 10px;
-  max-width: 300px;
-  display: none;
-  z-index: 2000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-.help-content h3 {
-  margin-top: 0;
-}
-.close-help {
-  margin-top: 10px;
-  background-color: #0078d4;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  border-radius: 5px;
-}
+    .help-button {
+      background-color: #007BFF;
+      position: absolute;
+      top: 90%;
+      left: 2%;
+      color: white;
+      border: none;
+      z-index: 1050;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .help-button:hover {
+      background-color: #0056b3;
+    }
+    .help-message {
+      display: block;
+      position: absolute;
+      opacity: 80%;
+      top: 30%;
+      left: 10%;
+      right: 10%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #007BFF;
+      border-radius: 5px;
+      background-color: #f1f9ff;
+      color: #0056b3;
+      z-index: 2000;
+    }
   </style>
 </head>
 <body>
@@ -370,6 +364,25 @@ input:checked + .slider:before {
     <a href="Developers_mobile.html">Developers </a>
     <a href="about_us_mobile.html">About Us</a>
     <a href="help.html">Help</a>
+  </div>
+  <!-- Help Button -->
+    <button class="help-button" onclick="showHelp()">Help</button>
+  <div id="helpMessage" class="help-message">
+    <div id="help-content">
+    <h3>Map Instructions</h3>
+    <ul>
+      <li><strong>Zoom Controls:</strong> Use the + and − buttons to zoom in and out.</li>
+      <li><strong>Marker Mode:</strong> Click "Place Marker" to enter placement mode. Tap again on the map to drop a marker.</li>
+      <li><strong>Exit Marker Mode:</strong> Click "Exit Placement Mode" to disable placing markers.</li>
+      <li><strong>Station Selector:</strong> Use the dropdown to zoom to a specific station.</li>
+      <li><strong>Reset Button:</strong> Resets the map view to default.</li>
+      <li><strong>Locate Me:</strong>Locates the person on the map</li>
+      <br><br>
+      <li><strong>For more information, visit the help page</strong></li>
+      <li>press help to close this window</li>
+    </ul>
+    <button id="close-help">X</button>
+  </div>
   </div>
   <!-- Zoom Controls -->
   <div id="ZoomControls" class="ZoomControls">
@@ -422,19 +435,7 @@ input:checked + .slider:before {
 <!-- Help Button -->
 <div id="help-button">?</div>
 <!-- Help Popup -->
-<div id="help-popup">
-  <div id="help-content">
-    <h3>Map Instructions</h3>
-    <ul>
-      <li><strong>Zoom Controls:</strong> Use the + and − buttons to zoom in and out.</li>
-      <li><strong>Marker Mode:</strong> Click "Place Marker" to enter placement mode. Tap again on the map to drop a marker.</li>
-      <li><strong>Exit Marker Mode:</strong> Click "Exit Placement Mode" to disable placing markers.</li>
-      <li><strong>Station Selector:</strong> Use the dropdown to zoom to a specific station.</li>
-      <li><strong>Reset Button:</strong> Resets the map view to default.</li>
-    </ul>
-    <button id="close-help">Close</button>
-  </div>
-</div>
+
   <script>
     function myFunction() {
       var x = document.getElementById("myLinks");
@@ -810,21 +811,10 @@ document.getElementById('locateBtn').addEventListener('click', function () {
     }
   );
 });
-document.getElementById("help-button").addEventListener("click", function () {
-  document.getElementById("help-popup").style.display = "block";
-});
-
-document.getElementById("close-help").addEventListener("click", function () {
-  document.getElementById("help-popup").style.display = "none";
-});
-
-// Optional: close help popup when clicking outside of it
-window.addEventListener("click", function (e) {
-  const popup = document.getElementById("help-popup");
-  if (e.target === popup) {
-    popup.style.display = "none";
-  }
-});
+    function showHelp() {
+      const helpMessage = document.getElementById('helpMessage');
+      helpMessage.style.display = helpMessage.style.display === 'block' ? 'none' : 'block';
+    }
 </script>
 
 </body>
