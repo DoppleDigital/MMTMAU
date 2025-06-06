@@ -667,7 +667,7 @@ confirmBtn.addEventListener("click", function () {
 
   const marker = L.marker(center, {
   icon: L.icon({
-    iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/orange-box.png',
+    iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/orange-dot.png',
     iconSize: [32, 32],
     iconAnchor: [16, 32],
     popupAnchor: [0, -32]
@@ -687,7 +687,7 @@ marker.bindPopup(popupContent).openPopup();
 // Add event listener to the delete button
 popupContent.querySelector(".delete-marker-btn").addEventListener("click", function () 
 {
-  map.removeLayer(marker);
+  map.removeLayer(marker, center);
 });  
 marker.push(marker);
 markerCount++;
