@@ -650,7 +650,7 @@ confirmBtn.addEventListener("click", function () {
     return;
   }
 // blue dot
-    const center = map.getCenter();
+    const marker = map.getCenter();
   L.marker(center, {
     icon: L.icon({
       iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/orange-dot.png',
@@ -664,6 +664,15 @@ confirmBtn.addEventListener("click", function () {
   crosshair.style.display = "none";
   markerWidget.style.display = "none";
   markerNameInput.value = "";
+
+  const marker = L.marker(center, {
+  icon: L.icon({
+    iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/orange-box.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  })
+}).addTo(map);
 
 // Create custom popup with delete button
 const popupContent = document.createElement("div");
