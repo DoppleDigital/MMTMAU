@@ -336,7 +336,7 @@ input:checked + .slider:before {
   <div class="esri-widget-button" onclick="map.zoomIn()" title="Zoom In"><b>+</b></div>
   <div class="esri-widget-button" onclick="map.zoomOut()" title="Zoom Out"><b>−</b></div>
   <div class="esri-widget-button" onclick="map.setView([14.583, 121.0], 12)" title="Reset Zoom"><b>↺</b></div>
-  <div class="esri-widget-button" id="locateBtn" title="Locate Me" style="font-weight:bold;">📍</div>
+  <div class="esri-widget-button" id="locateBtn" title="Locate Me" style="font-weight:bold;">👤</div>
 </div>
 
 <div id="addMarkerBtn" class="addMarkerBtn">
@@ -687,7 +687,8 @@ marker.bindPopup(popupContent).openPopup();
 // Add event listener to the delete button
 popupContent.querySelector(".delete-marker-btn").addEventListener("click", function () 
 {
-  map.removeLayer(marker, center);
+  map.removeLayer(marker);
+  map.removeLayer(center);
 });  
 marker.push(marker);
 markerCount++;
