@@ -87,7 +87,7 @@
     .ZoomControls {
       position: absolute;
       top: 50%;
-      left: 10px;
+      left: 2%;
       transform: translateY(-50%);
       display: flex;
       flex-direction: column;
@@ -96,7 +96,7 @@
       border: 5px solid #555;
       border-radius: 8px;
       padding: 5px;
-      box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: 2px 5px 8px rgba(0, 0, 0, 0.2);
       z-index: 1001;
     }
     .ZoomControls .esri-widget-button {
@@ -117,6 +117,58 @@
     .ZoomControls .esri-widget-button:hover {
       background-color: #f0f0f0;
     }
+    
+    .addMarkerBtn {
+      position: absolute;
+      top: 60%;
+      left: 15px;
+      width: 40px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      background-color: white;
+      border: 5px solid #555;
+      padding: 10px;
+      cursor: pointer;
+      color: #4c4c4c;
+      transition: background-color 0.2s ease;
+      margin-bottom: 5px;
+      border-radius: 4px;
+  z-index: 1050;
+}
+    .add-marker-btn .add-marker-btn:hover {
+      background-color: #f0f0f0;
+    }
+    .marker-widget {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border: 5px solid #555;
+  opacity: 95%;
+  display: none;
+  z-index: 1050;
+}
+
+.marker-widget button,
+.marker-widget input {
+  margin: 5px;
+}
+    
+.delete-marker-btn {
+  margin-top: 5px;
+  padding: 5px 10px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
     /* Right Panel styling */
 .right-panel {
   position: absolute;
@@ -195,58 +247,12 @@ select {
   z-index: 1050;
   display: none;
 }
-.marker-widget {
-  position: absolute;
-  top: 15%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: white;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border: 5px solid #555;
-  display: none;
-  z-index: 1050;
-}
 
-.marker-widget button,
-.marker-widget input {
-  margin: 5px;
-}
-
-.add-marker-btn {
-  position: absolute;
-  top: 60%;
-  left: 15px;
-      width: 40px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      background-color: white;
-      border: 5px solid #555;
-      padding: 10px;
-      cursor: pointer;
-      color: #4c4c4c;
-      transition: background-color 0.2s ease;
-      margin-bottom: 5px;
-      border-radius: 4px;
-  z-index: 1050;
-}
-.delete-marker-btn {
-  margin-top: 5px;
-  padding: 5px 10px;
-  background-color: #e74c3c;
-  color: white;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-}
 .switch {
   position: absolute;
   display: inline-block;
   top: 15%;
-  right: 10%;
+  right: 20%;
   width: 60px;
   height: 34px;
   z-index: 11;
@@ -282,6 +288,22 @@ input:checked + .slider {
 input:checked + .slider:before {
   transform: translateX(26px);
 }
+.esri-widget-button {
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 16px;
+  user-select: none;
+  margin: 2px;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease;
+}
+
+.esri-widget-button:hover {
+  background-color: #eee;
+}
   </style>
 </head>
 
@@ -307,15 +329,18 @@ input:checked + .slider:before {
     <a href="landmarks.html">Landmarks </a>
     <a href="Developers.html">Developers </a>
     <a href="about_us.html">About Us</a>
-    <a href="help.html">Help</a>
   </div>
 
   <!-- Zoom Controls -->
-  <div id="ZoomControls" class="ZoomControls">
-    <div class="esri-widget-button" onclick="map.zoomIn()" title="Zoom In"><b>+</b></div>
-    <div class="esri-widget-button" onclick="map.zoomOut()" title="Zoom Out"><b>−</b></div>
-    <div class="esri-widget-button" onclick="map.setView([14.583, 121.0], 12)" title="Reset Zoom"><b>↺</b></div>
-  </div>
+<div id="ZoomControls" class="ZoomControls">
+  <div class="esri-widget-button" onclick="map.zoomIn()" title="Zoom In"><b>+</b></div>
+  <div class="esri-widget-button" onclick="map.zoomOut()" title="Zoom Out"><b>−</b></div>
+  <div class="esri-widget-button" onclick="map.setView([14.583, 121.0], 12)" title="Reset Zoom"><b>↺</b></div>
+  <div class="esri-widget-button" id="locateBtn" title="Locate Me" style="font-weight:bold;">📍</div>
+</div>
+
+<div id="addMarkerBtn" class="addMarkerBtn">
+<div class="esri-widget-button" id="addMarkerBtn" title="Add Marker" style="font-weight:bold;">▼</div></div>
 
   <!-- Right Panel with dropdown list of stations -->
 <div class="right-panel">
@@ -355,8 +380,6 @@ input:checked + .slider:before {
     <button id="confirmBtn">Confirm</button>
     <button id="cancelBtn">Cancel</button>
   </div>
-
-  <div id="addMarkerBtn" class="addMarkerBtn"><button class="add-marker-btn" id="addMarkerBtn">▼</button></div>
 
 
   <script>
@@ -463,7 +486,7 @@ function zoomToStation() {
 
 
     // MRT-3 polyline (red)
-    L.polyline(latLngs, { color: 'red', weight: 5, opacity: 0.7 }).addTo(map);
+    L.polyline(latLngs, { color: 'red', weight: 5, opacity: 1.5 }).addTo(map);
 
     // LRT-1 Stations
     var lrt1Stations = [
@@ -538,7 +561,7 @@ function zoomTolrt1Station() {
 }
 
 
-    L.polyline(lrt1LatLngs, { color: 'green', weight: 5, opacity: 0.7 }).addTo(map);
+    L.polyline(lrt1LatLngs, { color: 'green', weight: 5, opacity: 1.5 }).addTo(map);
 
     var lrt2Stations = [
       { name: "Antipolo Station", coords: [14.625079328915435, 121.1213585512071] },
@@ -593,7 +616,7 @@ function zoomTolrt2Station() {
 }
 
 
-    L.polyline(lrt2LatLngs, { color: 'blue', weight: 5, opacity: 0.7 }).addTo(map);
+    L.polyline(lrt2LatLngs, { color: 'blue', weight: 6, opacity: 1.5 }).addTo(map);
 
 //crosshair function
 
@@ -642,7 +665,7 @@ confirmBtn.addEventListener("click", function () {
   markerWidget.style.display = "none";
   markerNameInput.value = "";
 
-  const marker = L.marker(center, {
+  const custommarker = L.marker(center, {
   icon: L.icon({
     iconUrl: 'https://maps.gstatic.com/mapfiles/ms2/micons/yellow-dot.png',
     iconSize: [32, 32],
@@ -681,6 +704,39 @@ document.getElementById("pageSwitch").addEventListener("change", function () {
     window.location.href = "main_map.html";
   }
 });
+// Locator button functionality
+document.getElementById('locateBtn').addEventListener('click', function() {
+  map.locate({ setView: true, maxZoom: 16 });
+});
+
+map.on('locationfound', function(e) {
+  // Remove old marker and circle if they exist
+  if (map._locateMarker) {
+    map.removeLayer(map._locateMarker);
+    map.removeLayer(map._locateCircle);
+  }
+
+  // Add new marker
+  map._locateMarker = L.marker(e.latlng).addTo(map)
+    .bindPopup("You are here")
+    .openPopup();
+
+  // Add circle with accuracy
+  map._locateCircle = L.circle(e.latlng, {
+    radius: e.accuracy / 2,
+    color: '#136AEC',
+    fillColor: '#136AEC',
+    fillOpacity: 1,
+    weight: 2,
+    opacity: 0.5
+  }).addTo(map);
+});
+
+map.on('locationerror', function(e) {
+  alert("Location access denied or unavailable.");
+});
+
+
 </script>
 </body>
 </html>
